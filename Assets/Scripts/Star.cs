@@ -11,7 +11,7 @@ public class Star : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         int x = Random.Range(-10, 11);
         int y = Random.Range(2, 6);
-        Debug.Log(x + "" + y);
+        //Debug.Log(x + "" + y);
         rb.AddForce(new Vector2(x / 5, y),ForceMode2D.Impulse);
     }
 

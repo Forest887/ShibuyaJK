@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     GameObject lastShape = null;
+    [SerializeField] GameObject scoreText = null;
+    [SerializeField] GameObject comboText = null;
     int score = 0;
+    int displayScore = 0;
     int combo = 0;
 
     void Start()
@@ -16,7 +20,39 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+        if (displayScore < score)
+        {
+            displayScore++;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Text score_text = scoreText.GetComponent<Text>();
+        score_text.text = "Score: " + displayScore + "  ";
+        Text combo_text = comboText.GetComponent<Text>();
+        if (combo == 0)
+        {
+            combo_text.text = " ";
+        }
+        else
+        {
+            combo_text.text = "コンボ: " + combo + "  ";
+        }
+
+        if (scoreText.transform.localScale.x > 1)
+        {
+            float scale = scoreText.transform.localScale.x;
+            scale -= 0.01f;
+            scoreText.transform.localScale = new Vector3(scale, scale, 1);
+        }
+
+        if (comboText.transform.localScale.x > 1)
+        {
+            float scale = comboText.transform.localScale.x;
+            scale -= 0.01f;
+            comboText.transform.localScale = new Vector3(scale, scale, 1);
+        }
     }
 
     /// <summary>
@@ -24,6 +60,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void AddScore()
     {
+        scoreText.transform.localScale *= 1.2f;
+        comboText.transform.localScale *= 1.2f;
+        //float comboP = 100 * ((float)combo / 100);
+        int comboP = combo / 10;
+        score += 100 + (int)comboP;
         combo++;
     }
 
