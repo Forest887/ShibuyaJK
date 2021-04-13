@@ -5,10 +5,13 @@ using UnityEngine;
 public class MouseClick : MonoBehaviour
 {
     Vector2 clickPosition = Vector2.zero;
-    GameObject lastShape = null;
+
+    [SerializeField] GameObject gameManager = null;
+    GameManager gM;
+
     void Start()
     {
-        
+        gM = gameManager.GetComponent<GameManager>();
     }
 
     void Update()
@@ -31,30 +34,11 @@ public class MouseClick : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //マウスのポジションを取得してRayに代入
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction); // 2D マウスのポジションからRayを投げて何かに当たったらhitに入れる
             
-            if (hit.collider.gameObject.tag == "PuzzleShape")
+            // クリックしたものがshapeのとき
+            if (hit && hit.collider.gameObject.tag == "PuzzleShape")
             {
                 GameObject shape = hit.collider.gameObject;
-
-                if (!lastShape)
-                {
-                    lastShape = shape;
-                }
-                else
-                {
-                    PuzzleShape puzzleShape = lastShape.GetComponent<PuzzleShape>();
-                    string type = puzzleShape.shapeType;
-                    puzzleShape = shape.GetComponent<PuzzleShape>();
-
-                    if (type == puzzleShape.shapeType && lastShape != shape)
-                    {
-                        Destroy(lastShape);
-                        Destroy(shape);
-                    }
-                    else
-                    {
-                        lastShape = null;
-                    }
-                }
+                gM.ShapeCheck(shape);
             }
         }
     }
