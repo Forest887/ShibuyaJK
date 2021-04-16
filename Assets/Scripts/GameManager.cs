@@ -8,36 +8,56 @@ public class GameManager : MonoBehaviour
     GameObject lastShape = null;
     [SerializeField] GameObject scoreText = null;
     [SerializeField] GameObject comboText = null;
+    [SerializeField] GameObject timerText = null;
+    [SerializeField] GameObject missMinus = null;
+    [SerializeField] GameObject canvas = null;
+
+    [SerializeField] int timer = 60;
+    [SerializeField] int missScore = 10;
+
+    int displayTimer = 0;
     int score = 0;
     int displayScore = 0;
     int combo = 0;
+    Text timer_text;
+    Text score_text;
+    Text combo_text;
 
     void Start()
     {
-        
+        displayTimer = timer;
+        timer_text = timerText.GetComponent<Text>();
+        score_text = scoreText.GetComponent<Text>();
+        combo_text = comboText.GetComponent<Text>();
     }
 
 
     void Update()
     {
+        float timerFloat = Time.time;
+        displayTimer = timer - (int)timerFloat;
+
         if (displayScore < score)
         {
             displayScore++;
+        }
+        else if(displayScore > score)
+        {
+            displayScore--;
         }
     }
 
     private void FixedUpdate()
     {
-        Text score_text = scoreText.GetComponent<Text>();
-        score_text.text = "Score: " + displayScore + "  ";
-        Text combo_text = comboText.GetComponent<Text>();
+        timer_text.text = " 残り: " + displayTimer + "  ";
+        score_text.text = displayScore.ToString() + "  ";
         if (combo == 0)
         {
             combo_text.text = " ";
         }
         else
         {
-            combo_text.text = "コンボ: " + combo + "  ";
+            combo_text.text = " コンボ: " + combo + "  ";
         }
 
         if (scoreText.transform.localScale.x > 1)
@@ -74,6 +94,10 @@ public class GameManager : MonoBehaviour
     /// <param name="shape">形</param>
     public void ShapeCheck(GameObject shape)
     {
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
         if (!lastShape)// １回目の選択時
         {
             lastShape = shape;
@@ -103,6 +127,12 @@ public class GameManager : MonoBehaviour
             else // 違う形を選択したとき
             {
                 Debug.Log("lose");
+                //
+                //  失敗したときのスコアのマイナスを表示する
+                Instantiate(missMinus, canvas.transform);
+                score -= missScore;
+                combo = 0;
+
                 lastShape.transform.localScale = Vector3.one;
                 lastShape = null;
             }
