@@ -26,6 +26,7 @@ public class GeneratorContoller : MonoBehaviour
     /// </summary>
     public void Change()
     {
+        Stars();
         Destroy(nowShape);
         int i = Random.Range(0, shape.Length - 1);
         if (i >= shapeNum)

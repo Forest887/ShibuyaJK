@@ -11,6 +11,7 @@ public class StartCountDwon : MonoBehaviour
 
 
     int displayTimer = 0;
+    float timer = 0;
     private void Awake()
     {
         Time.timeScale = 0;
@@ -18,7 +19,7 @@ public class StartCountDwon : MonoBehaviour
 
     void Update()
     {
-        float timer = Time.unscaledTime;
+        timer += Time.unscaledDeltaTime;
 
         displayTimer = countDown - (int)timer;
 

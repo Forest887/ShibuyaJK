@@ -1275,7 +1275,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Puzzle
+          m_StringArgument: Puzzle 30s
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1385508325
@@ -1598,7 +1598,7 @@ MonoBehaviour:
   plus5: {fileID: 6633363040498302137, guid: 6c5b55c7256e4ab47b5045688a0eb3ab, type: 3}
   canvas: {fileID: 2051585400}
   timeOverUI: {fileID: 653594991}
-  timeLimit: 60
+  timeLimit: 30
   missScore: 10
 --- !u!1 &1500858318
 GameObject:

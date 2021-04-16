@@ -10,46 +10,56 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject comboText = null;
     [SerializeField] GameObject timerText = null;
     [SerializeField] GameObject missMinus = null;
+    [SerializeField] GameObject plus5 = null;
     [SerializeField] GameObject canvas = null;
+    [SerializeField] GameObject timeOverUI = null;
 
-    [SerializeField] int timer = 60;
+    [SerializeField] int timeLimit = 60;
     [SerializeField] int missScore = 10;
 
-    int displayTimer = 0;
+    int timer = 0;
+    float timerFloat = 0;
     int score = 0;
     int displayScore = 0;
     int combo = 0;
+    int lastDeleteNum = 99;
+
     Text timer_text;
     Text score_text;
     Text combo_text;
 
     void Start()
     {
-        displayTimer = timer;
+        timer = timeLimit;
         timer_text = timerText.GetComponent<Text>();
         score_text = scoreText.GetComponent<Text>();
         combo_text = comboText.GetComponent<Text>();
     }
 
 
-    void Update()
-    {
-        float timerFloat = Time.time;
-        displayTimer = timer - (int)timerFloat;
-
-        if (displayScore < score)
-        {
-            displayScore++;
-        }
-        else if(displayScore > score)
-        {
-            displayScore--;
-        }
-    }
 
     private void FixedUpdate()
     {
-        timer_text.text = " 残り: " + displayTimer + "  ";
+        if (timer <= 0)
+        {
+            TimeOver();
+        }
+        timerFloat += Time.deltaTime;
+        timer = timeLimit - (int)timerFloat;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (displayScore < score)
+            {
+                displayScore++;
+            }
+            else if (displayScore > score)
+            {
+                displayScore--;
+            }
+        }
+
+        timer_text.text = " 残り " + timer + "秒";
         score_text.text = displayScore.ToString() + "  ";
         if (combo == 0)
         {
@@ -57,7 +67,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            combo_text.text = " コンボ: " + combo + "  ";
+            combo_text.text = " コンボ " + combo + "  ";
         }
 
         if (scoreText.transform.localScale.x > 1)
@@ -75,17 +85,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void TimeOver()
+    {
+        Time.timeScale = 0;
+        timeOverUI.SetActive(true);
+    }
+
     /// <summary>
     /// 得点を加算する
     /// </summary>
-    void AddScore()
+    void AddScore(int num)
     {
         scoreText.transform.localScale *= 1.2f;
         comboText.transform.localScale *= 1.2f;
-        //float comboP = 100 * ((float)combo / 100);
-        int comboP = combo / 10;
+
+        // １コンボごとに１点貰える
+        float comboP = 100 * ((float)combo / 100);
+
+        // comboは1/10の点数が貰える（小数点以下切り捨て）
+        //int comboP = combo / 10;
+
         score += 100 + (int)comboP;
         combo++;
+
+        if (lastDeleteNum == num)
+        {
+            score += 5;
+            Instantiate(plus5, canvas.transform);
+        }
+        lastDeleteNum = num;
     }
 
     /// <summary>
@@ -114,13 +142,11 @@ public class GameManager : MonoBehaviour
             // 同じ形を選択したとき
             if (shapeNum == lastShapeNum && lastShape != shape)
             {
-                AddScore();
+                AddScore(shapeNum);
 
                 Debug.Log("change");
                 shapeScript.Change();
-                shapeScript.Stars();
                 lastShapeScript.Change();
-                lastShapeScript.Stars();
                 lastShape.transform.localScale = Vector3.one;
                 lastShape = null;
             }
