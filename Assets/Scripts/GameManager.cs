@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     GameObject lastShape = null;
+
+    Skill skillScript;
+    [SerializeField] GameObject skill = null;
     [SerializeField] GameObject scoreText = null;
     [SerializeField] GameObject comboText = null;
     [SerializeField] GameObject timerText = null;
@@ -13,6 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject plus5 = null;
     [SerializeField] GameObject canvas = null;
     [SerializeField] GameObject timeOverUI = null;
+    [SerializeField] AudioClip[] audios = null;
+    AudioSource audioSource = null;
+
 
     [SerializeField] int timeLimit = 60;
     [SerializeField] int missScore = 10;
@@ -22,7 +28,10 @@ public class GameManager : MonoBehaviour
     int score = 0;
     int displayScore = 0;
     int combo = 0;
+    int sameColorCombo = 0;
     int lastDeleteNum = 99;
+
+    bool useSkill = false;
 
     Text timer_text;
     Text score_text;
@@ -34,6 +43,8 @@ public class GameManager : MonoBehaviour
         timer_text = timerText.GetComponent<Text>();
         score_text = scoreText.GetComponent<Text>();
         combo_text = comboText.GetComponent<Text>();
+        audioSource = GetComponent<AudioSource>();
+        skillScript = skill.GetComponent<Skill>();
     }
 
 
@@ -60,7 +71,7 @@ public class GameManager : MonoBehaviour
         }
 
         timer_text.text = " 残り " + timer + "秒";
-        score_text.text = displayScore.ToString() + "  ";
+        score_text.text = "  " + displayScore.ToString() + "  ";
         if (combo == 0)
         {
             combo_text.text = " ";
@@ -89,6 +100,9 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         timeOverUI.SetActive(true);
+        RectTransform rectTransform = scoreText.GetComponent<RectTransform>();
+        rectTransform.localPosition = Vector3.zero;
+        scoreText.transform.localScale *= 2;
     }
 
     /// <summary>
@@ -99,8 +113,8 @@ public class GameManager : MonoBehaviour
         scoreText.transform.localScale *= 1.2f;
         comboText.transform.localScale *= 1.2f;
 
-        // １コンボごとに１点貰える
-        float comboP = 100 * ((float)combo / 100);
+        // １コンボごとに2点貰える
+        float comboP = 100 * ((float)combo / 50);
 
         // comboは1/10の点数が貰える（小数点以下切り捨て）
         //int comboP = combo / 10;
@@ -110,8 +124,14 @@ public class GameManager : MonoBehaviour
 
         if (lastDeleteNum == num)
         {
-            score += 5;
+            score += 20 + sameColorCombo * 10;
+            Debug.Log(20 + sameColorCombo * 10);
+            sameColorCombo++;
             Instantiate(plus5, canvas.transform);
+        }
+        else
+        {
+            sameColorCombo = 0;
         }
         lastDeleteNum = num;
     }
@@ -124,13 +144,20 @@ public class GameManager : MonoBehaviour
     {
         if (Time.timeScale == 0)
         {
+            if (useSkill)
+            {
+                skillScript.Choice(shape);
+            }
+
             return;
         }
         if (!lastShape)// １回目の選択時
         {
+            audioSource.PlayOneShot(audios[0]);
+
             lastShape = shape;
             lastShape.transform.localScale *= 1.2f;// 選択時に大きくする
-            Debug.Log("set");
+            //Debug.Log("set");
         }
         else
         {
@@ -144,7 +171,9 @@ public class GameManager : MonoBehaviour
             {
                 AddScore(shapeNum);
 
-                Debug.Log("change");
+                audioSource.PlayOneShot(audios[1]);
+
+                //Debug.Log("change");
                 shapeScript.Change();
                 lastShapeScript.Change();
                 lastShape.transform.localScale = Vector3.one;
@@ -152,8 +181,10 @@ public class GameManager : MonoBehaviour
             }
             else // 違う形を選択したとき
             {
-                Debug.Log("lose");
-                //
+                //Debug.Log("lose");
+
+                audioSource.PlayOneShot(audios[2]);
+
                 //  失敗したときのスコアのマイナスを表示する
                 Instantiate(missMinus, canvas.transform);
                 score -= missScore;
@@ -163,5 +194,10 @@ public class GameManager : MonoBehaviour
                 lastShape = null;
             }
         }
+    }
+
+    public void UseSkill()
+    {
+        useSkill = true;
     }
 }

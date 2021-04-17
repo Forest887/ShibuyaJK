@@ -16,11 +16,6 @@ public class GeneratorContoller : MonoBehaviour
     }
 
 
-    void Update()
-    {
-
-    }
-
     /// <summary>
     /// 形を変える
     /// </summary>

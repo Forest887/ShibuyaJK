@@ -6,14 +6,4 @@ public class PuzzleShape : MonoBehaviour
 {
      [SerializeField] public string shapeType;
 
-    void Start()
-    {
-        
-    }
-
-
-    void Update()
-    {
-        
-    }
 }

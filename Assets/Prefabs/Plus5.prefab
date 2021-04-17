@@ -72,13 +72,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 5
     m_MaxSize: 60
-    m_Alignment: 4
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: +5
+  m_Text: "\u30DC\u30FC\u30CA\u30B9 "
 --- !u!114 &1521178321098715796
 MonoBehaviour:
   m_ObjectHideFlags: 0
