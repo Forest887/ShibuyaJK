@@ -31,6 +31,13 @@ public class GeneratorContoller : MonoBehaviour
         shapeNum = i;
         nowShape = Instantiate(shape[shapeNum], this.transform);
     }
+    public void Change(int num)
+    {
+        Stars();
+        Destroy(nowShape);
+        shapeNum = num;
+        nowShape = Instantiate(shape[shapeNum], this.transform);
+    }
 
     /// <summary>
     /// 星を生成する

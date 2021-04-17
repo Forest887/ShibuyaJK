@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         if (lastDeleteNum == num)
         {
             score += 20 + sameColorCombo * 10;
-            Debug.Log(20 + sameColorCombo * 10);
+            //Debug.Log(20 + sameColorCombo * 10);
             sameColorCombo++;
             Instantiate(plus5, canvas.transform);
         }
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
             audioSource.PlayOneShot(audios[0]);
 
             lastShape = shape;
-            lastShape.transform.localScale *= 1.2f;// 選択時に大きくする
+            lastShape.transform.localScale *= 1.25f;// 選択時に大きくする
             //Debug.Log("set");
         }
         else
@@ -196,8 +196,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UseSkill()
+    public void UseSkill(bool skill)
     {
-        useSkill = true;
+        if (lastShape)
+        {
+            lastShape.transform.localScale = Vector3.one;
+            lastShape = null;
+        }
+        useSkill = skill;
     }
 }

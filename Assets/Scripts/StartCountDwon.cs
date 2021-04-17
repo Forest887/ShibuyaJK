@@ -8,6 +8,7 @@ public class StartCountDwon : MonoBehaviour
 {
     [SerializeField] int countDown = 3;
     [SerializeField] GameObject countDownText = null;
+    [SerializeField] GameObject skill = null;
 
 
     int displayTimer = 0;
@@ -29,6 +30,7 @@ public class StartCountDwon : MonoBehaviour
         if (displayTimer == 0 )
         {
             Time.timeScale = 1;
+            skill.SetActive(true);
             countDownText.SetActive(false);
             Destroy(this.gameObject);
         }
