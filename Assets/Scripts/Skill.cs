@@ -15,7 +15,7 @@ public class Skill : MonoBehaviour
     [SerializeField] AudioClip[] audioClip = null;
 
     GameObject lastShape;
-    float timer = 0;
+    //float timer = 0;
 
     int changeShapeNum = 1000;
     void Start()
@@ -27,22 +27,22 @@ public class Skill : MonoBehaviour
         shapegenerators = GameObject.FindGameObjectsWithTag("PuzzleShape");
     }
 
-    private void FixedUpdate()
-    {
-        if (timer > 20)
-        {
-            button.interactable = true;
-        }
-        else
-        {
-            timer += Time.deltaTime;
-        }
-    }
+    //private void FixedUpdate()
+    //{
+    //    if (timer > 20)
+    //    {
+    //        button.interactable = true;
+    //    }
+    //    else
+    //    {
+    //        timer += Time.deltaTime;
+    //    }
+    //}
 
     public void UseSkill()
     {
         button.interactable = false;
-        timer = 0;
+        //timer = 0;
         audioSource.PlayOneShot(audioClip[2]);
         //　時間を止めて形を２個選択しひとつめを二つ目の形に変える
         //　時間を止める

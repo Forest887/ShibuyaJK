@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         timeOverUI.SetActive(true);
+        skill.SetActive(false);
         RectTransform rectTransform = scoreText.GetComponent<RectTransform>();
         rectTransform.localPosition = Vector3.zero;
         scoreText.transform.localScale *= 2;
@@ -204,5 +205,10 @@ public class GameManager : MonoBehaviour
             lastShape = null;
         }
         useSkill = skill;
+    }
+
+    public void TimeScale1()
+    {
+        Time.timeScale = 1;
     }
 }
